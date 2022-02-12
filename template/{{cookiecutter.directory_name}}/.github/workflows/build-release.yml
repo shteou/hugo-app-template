@@ -24,7 +24,9 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      # Contents write required for releasing to gh-pages
+      contents: write
+      pages: write
       packages: write
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
@@ -36,6 +38,17 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Fix .git permissions
+        run: |
+          chown -R $(id -un):$(id -gn) .git/objects/
+
+
+      - name: Configure Git
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
       
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.36.0
@@ -44,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN {{ "}}" }}
           WITH_V: true
           DRY_RUN: true
-
+          DEFAULT_BUMP: patch
           
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -68,6 +81,32 @@ jobs:
         with:
           images: ${{ "{{" }} env.REGISTRY {{ "}}" }}/${{ "{{" }} env.IMAGE_NAME {{ "}}" }}
 
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.36.0
+        if: github.event_name != 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN {{ "}}" }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+
+      - name: Install Helm
+        if: github.event_name != 'pull_request'
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.7.1
+
+      - name: Update chart version
+        if: github.event_name != 'pull_request'
+        run: |
+          sed -i "s/version: .*/version: ${{ "{{" }} steps.semantic_version.outputs.new_tag {{ "}}" }}/g" charts/recipes-stewartplatt/Chart.yaml
+          sed -i "s/appVersion: .*/appVersion: ${{ "{{" }} steps.semantic_version.outputs.new_tag {{ "}}" }}/g" charts/recipes-stewartplatt/Chart.yaml
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.3.0
+        if: github.event_name != 'pull_request'
+        env:
+          CR_TOKEN: "${{ "{{" }} secrets.GITHUB_TOKEN {{ "}}" }}"
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -76,12 +115,6 @@ jobs:
         with:
           context: .
           push: ${{ "{{" }} github.event_name != 'pull_request' {{ "}}" }}
-          tags: ${{ "{{" }} env.REGISTRY {{ "}}" }}/${{ "{{" }} env.IMAGE_NAME {{ "}}" }}:${{ "{{" }} steps.semantic_version.outputs.tag {{ "}}" }}
+          tags: ${{ "{{" }} env.REGISTRY {{ "}}" }}/${{ "{{" }} env.IMAGE_NAME {{ "}}" }}:${{ "{{" }} steps.semantic_version.outputs.new_tag {{ "}}" }}
           labels: ${{ "{{" }} steps.meta.outputs.labels {{ "}}" }}
 
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.36.0
-        if: github.event_name != 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ "{{" }} secrets.GITHUB_TOKEN {{ "}}" }}
-          WITH_V: true
