@@ -1,0 +1,10 @@
+{
+  "site_name": "my site",
+  "directory_name": "{{cookiecutter.site_name|lower|camelcase|kebabcase}}",
+  "_extensions": [
+    "kamidana.extensions.CookiecutterAdditionalModulesExtension"
+  ],
+  "_additional_modules": [
+    "kamidana.additionals.naming"
+  ]
+}
