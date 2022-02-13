@@ -1,7 +1,7 @@
 {
-  "site_name": "my site",
-  "site_title": "My shiny website",
-  "directory_name": "{{cookiecutter.site_name|lower|camelcase|kebabcase}}",
+  "name": "stewartplatt-com",
+  "github_org": "shteou",
+  "title": "Stewart Platt's personal website",
   "_extensions": [
     "kamidana.extensions.CookiecutterAdditionalModulesExtension"
   ],

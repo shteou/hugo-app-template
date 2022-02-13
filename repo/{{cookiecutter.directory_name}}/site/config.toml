@@ -1,2 +1,0 @@
-theme = "simple"
-title = "{{ cookiecutter.site_title }}"

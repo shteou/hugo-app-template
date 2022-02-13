@@ -1,4 +1,4 @@
-# {{ cookiecutter.site_name }}
+# {{ cookiecutter.name }}
 
 ## Setup
 
