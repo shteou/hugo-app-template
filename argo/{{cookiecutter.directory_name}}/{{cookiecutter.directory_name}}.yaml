@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ cookiecutter.directory_name }}
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: {{ cookiecutter.directory_name }}
+    repoURL: https://{{ cookiecutter.github_owner }}.github.com/{{ cookiecutter.directory_name }}
+    targetRevision: ">= 0.0.1"
+    helm:
+      releaseName: {{ cookiecutter.directory_name }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: apps
