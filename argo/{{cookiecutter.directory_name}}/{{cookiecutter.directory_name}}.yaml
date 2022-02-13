@@ -5,6 +5,10 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
   source:
     chart: {{ cookiecutter.directory_name }}
     repoURL: https://{{ cookiecutter.github_owner }}.github.com/{{ cookiecutter.directory_name }}
