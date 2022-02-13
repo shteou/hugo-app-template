@@ -16,7 +16,7 @@ ingress:
     paths:
     - '/'
   tls:
-  - secretName: {{ cookiecutter.name|lower|replace('-', '.')  }}-stewartplatt-com
+  - secretName: {{ cookiecutter.name }}
     hosts:
     - {{ cookiecutter.name|lower|replace('-', '.')  }}
     - www.{{ cookiecutter.name|lower|replace('-', '.')  }}
