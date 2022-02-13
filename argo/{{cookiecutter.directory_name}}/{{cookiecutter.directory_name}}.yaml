@@ -11,7 +11,7 @@ spec:
       selfHeal: true
   source:
     chart: {{ cookiecutter.directory_name }}
-    repoURL: https://{{ cookiecutter.github_owner }}.github.com/{{ cookiecutter.directory_name }}
+    repoURL: https://{{ cookiecutter.github_owner }}.github.io/{{ cookiecutter.directory_name }}
     targetRevision: "{{ cookiecutter.version_constraint }}"
     helm:
       releaseName: {{ cookiecutter.directory_name }}
