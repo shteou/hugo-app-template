@@ -1,10 +1,7 @@
 {
   "github_owner": "shteou",
-  "site_name": "my site",
-  "site_title": "My shiny website",
-  "directory_name": "{{cookiecutter.site_name|lower|camelcase|kebabcase}}",
+  "name": "my-site",
   "version": "0.1.0",
-  "version_constraint": "~v{{cookiecutter.version}}",
   "_extensions": [
     "kamidana.extensions.CookiecutterAdditionalModulesExtension"
   ],
