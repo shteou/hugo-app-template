@@ -12,7 +12,7 @@ spec:
   source:
     chart: {{ cookiecutter.directory_name }}
     repoURL: https://{{ cookiecutter.github_owner }}.github.com/{{ cookiecutter.directory_name }}
-    targetRevision: ">= 0.0.1"
+    targetRevision: "{{ cookiecutter.version_constraint }}"
     helm:
       releaseName: {{ cookiecutter.directory_name }}
   destination:
