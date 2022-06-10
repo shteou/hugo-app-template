@@ -4,7 +4,7 @@ certifi==2021.10.8
 chardet==4.0.0
 charset-normalizer==2.0.11
 click==8.0.3
-cookiecutter==1.7.3
+cookiecutter==2.1.1
 dictknife==0.13.0
 idna==3.3
 inflection==0.5.1
